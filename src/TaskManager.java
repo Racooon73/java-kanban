@@ -2,16 +2,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
-    private HashMap<Integer,Task> tasks;
-    private HashMap<Integer,SubTask> subTasks;
-    private HashMap<Integer,Epic> epics;
+    private final HashMap<Integer,Task> tasks;
+    private final HashMap<Integer,SubTask> subTasks;
+    private final HashMap<Integer,Epic> epics;
     private int ids;
 
     public TaskManager() {
-        tasks = new HashMap<>();
-        subTasks = new HashMap<>();
-        epics = new HashMap<>();
-        ids = 0;
+        this.tasks = new HashMap<>();
+        this.subTasks = new HashMap<>();
+        this.epics = new HashMap<>();
+        this.ids = 0;
     }
     public HashMap<Integer,Task> getTaskList(){
         return tasks;
@@ -49,61 +49,24 @@ public class TaskManager {
         epics.put(epic.getId(), epic);
     }
 
-    public Task getTask(int id){
-        return tasks.get(id);
-    }
-
-    public SubTask getSubTask(int id){
-        return subTasks.get(id);
-    }
-
-    public Epic getEpic(int id){
-        return epics.get(id);
-    }
-
-    public void removeTaskList(){
-        tasks.clear();
-    }
-
-    public void removeSubTaskList(){
-        subTasks.clear();
-    }
-
-    public void removeEpicsList(){
-        epics.clear();
-    }
-
-    public ArrayList<SubTask> getSubTasksFromEpic(Epic epic){
-        return epic.getSubTasks();
-    }
     public void updateTask(Task task) {
-
         tasks.put(task.getId(), task);
     }
 
     public void updateSubTask(SubTask subTask) {
-
         subTasks.put(subTask.getId(), subTask);
         epicStatus(epics.get(subTask.getEpicId()));
     }
 
-    public void updateEpic(Epic epic) {
-
-        epics.put(epic.getId(), epic);
-    }
-
     public void removeTask(Task task) {
-
         tasks.remove(task.getId());
     }
 
     public void removeSubTask(SubTask subTask) {
-
         subTasks.remove(subTask.getId());
     }
 
     public void removeEpic(Epic epic) {
-
         for (SubTask subTask : epic.getSubTasks()) {
             removeSubTask(subTask);
         }
