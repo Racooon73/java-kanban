@@ -1,12 +1,15 @@
-public class SubTask extends Task {
- private int epicId;
+package kanban.tasks;
 
-    public SubTask(String name, String description, String status) {
+import kanban.util.other.Status;
+
+public class SubTask extends Task {
+    private int epicId;
+
+    public SubTask(String name, String description, Status status) {
         super(name, description,status);
         this.epicId = 0;
 
     }
-
     public void setEpicId(int epicId) {
         this.epicId = epicId;
     }
@@ -17,7 +20,7 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "SubTask{ name= " +this.getName()+
+        return "kanban.tasks.SubTask{ name= " +this.getName()+
                 " epicId=" + epicId +
                 ", id=" + id + " status= "+ this.getStatus()+
                 '}';
