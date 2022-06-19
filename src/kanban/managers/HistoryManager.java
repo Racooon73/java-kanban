@@ -1,4 +1,4 @@
-package kanban.util.managers;
+package kanban.managers;
 
 import kanban.tasks.Task;
 

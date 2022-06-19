@@ -1,9 +1,11 @@
-package kanban.util.managers;
+package kanban.managers;
 
 import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
 import kanban.tasks.Task;
-import kanban.util.other.Status;
+import kanban.enums.Status;
+import kanban.util.Managers;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,13 +17,13 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Epic> epics;
     private final HistoryManager historyManager;
 
-    private int ids;
+    private int id;
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.subTasks = new HashMap<>();
         this.epics = new HashMap<>();
-        this.ids = 0;
+        this.id = 0;
         this.historyManager = Managers.getDefaultHistory();
     }
     @Override
@@ -53,26 +55,26 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public void addTask(Task task) {
-        ids++;
-        task.setId(ids);
-        tasks.put(ids,task);
+        id++;
+        task.setId(id);
+        tasks.put(id,task);
     }
     @Override
     public void addSubTask(SubTask subTask) {
-        ids++;
-        subTask.setId(ids);
-        subTasks.put(ids,subTask);
+        id++;
+        subTask.setId(id);
+        subTasks.put(id,subTask);
     }
     @Override
     public void addEpic(Epic epic) {
-        ids++;
-        epic.setId(ids);
+        id++;
+        epic.setId(id);
         for (SubTask subTask : epic.getSubTasks()) {
             this.addSubTask(subTask);
             subTask.setEpicId(epic.getId());
 
         }
-        InMemoryTaskManager.epicStatus(epic);
+        InMemoryTaskManager.updateEpicStatus(epic);
         epics.put(epic.getId(), epic);
     }
     @Override
@@ -82,7 +84,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubTask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
-        InMemoryTaskManager.epicStatus(epics.get(subTask.getEpicId()));
+        InMemoryTaskManager.updateEpicStatus(epics.get(subTask.getEpicId()));
     }
     @Override
     public void removeTask(Task task) {
@@ -100,7 +102,7 @@ public class InMemoryTaskManager implements TaskManager {
         epics.remove(epic.getId());
     }
 
-    public static void epicStatus(Epic epic){
+    public static void updateEpicStatus(Epic epic){
         int news = 0;
         int done = 0;
         ArrayList<SubTask> subTaskList = epic.getSubTasks();

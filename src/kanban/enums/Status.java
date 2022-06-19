@@ -1,4 +1,4 @@
-package kanban.util.other;
+package kanban.enums;
 
 public enum Status {
     NEW,

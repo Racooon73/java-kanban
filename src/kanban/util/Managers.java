@@ -1,5 +1,5 @@
-package kanban.util.managers;
-
+package kanban.util;
+import kanban.managers.*;
 public class Managers {
 
      public static TaskManager getDefault(){

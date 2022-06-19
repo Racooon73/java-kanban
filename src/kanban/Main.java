@@ -3,9 +3,10 @@ package kanban;
 import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
 import kanban.tasks.Task;
-import kanban.util.managers.Managers;
-import kanban.util.managers.TaskManager;
-import kanban.util.other.Status;
+import kanban.util.Managers;
+import kanban.enums.Status;
+import kanban.managers.*;
+
 
 public class Main {
 

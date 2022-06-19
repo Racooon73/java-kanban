@@ -1,20 +1,20 @@
-package kanban.util.managers;
+package kanban.managers;
 
 import kanban.tasks.Task;
-
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> history;
+    private final LinkedList<Task> history;
 
     public InMemoryHistoryManager() {
-        this.history = new ArrayList<>();
+        this.history = new LinkedList<>();
     }
     @Override
     public void add(Task task){
-        if(history.size() > 10)
-            history.remove(0);
+        if(history.size() >= 10){
+            history.removeFirst();
+        }
         history.add(task);
     }
     @Override

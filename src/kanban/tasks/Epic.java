@@ -1,7 +1,7 @@
 package kanban.tasks;
 
-import kanban.util.managers.*;
-import kanban.util.other.Status;
+import kanban.managers.*;
+import kanban.enums.Status;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -17,7 +17,7 @@ public class Epic extends Task {
         int epicId = this.getId();
         subTask.setEpicId(epicId);
         subTasks.add(subTask);
-        InMemoryTaskManager.epicStatus(this);
+        InMemoryTaskManager.updateEpicStatus(this);
     }
 
     public ArrayList<SubTask> getSubTasks(){

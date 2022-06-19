@@ -1,6 +1,6 @@
 package kanban.tasks;
 
-import kanban.util.other.Status;
+import kanban.enums.Status;
 
 public class SubTask extends Task {
     private int epicId;
