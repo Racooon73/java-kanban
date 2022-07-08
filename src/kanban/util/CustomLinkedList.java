@@ -37,7 +37,11 @@ public class CustomLinkedList<T extends Task> {
         }
         return tasks;
     }
-
+    public void remove(int id){
+        if(this.nodeHashMap.containsKey(id)){
+            this.removeNode(this.nodeHashMap.get(id));
+        }
+    }
     public void removeNode(Node<T> node) {
 
         Node<T> prevNode = node.prev;
@@ -58,7 +62,7 @@ public class CustomLinkedList<T extends Task> {
         }
     }
 
-     public static class Node<T> {
+     private static class Node<T> {
         private final T data;
         private Node<T> next;
         private Node<T> prev;
