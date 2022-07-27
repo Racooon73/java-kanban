@@ -1,5 +1,6 @@
 package kanban.tasks;
 
+import kanban.enums.TaskType;
 import kanban.managers.*;
 import kanban.enums.Status;
 import java.util.ArrayList;
@@ -22,5 +23,9 @@ public class Epic extends Task {
 
     public ArrayList<SubTask> getSubTasks(){
         return subTasks;
+    }
+    @Override
+    public String toString() {
+        return id + "," + TaskType.EPIC + "," + name + "," + status + "," + description + ",\n";
     }
 }

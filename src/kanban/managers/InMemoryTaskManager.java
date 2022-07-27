@@ -56,26 +56,43 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addTask(Task task) {
         id++;
+        if(task.getId() == -1){
         task.setId(id);
         tasks.put(id,task);
+        }else{
+            tasks.put(task.getId(),task);
+        }
     }
     @Override
     public void addSubTask(SubTask subTask) {
         id++;
+        if(subTask.getId() == -1){
         subTask.setId(id);
         subTasks.put(id,subTask);
+        }else{
+            subTasks.put(subTask.getId(),subTask);
+        }
     }
     @Override
     public void addEpic(Epic epic) {
         id++;
+        if(epic.getId() == -1){
         epic.setId(id);
         for (SubTask subTask : epic.getSubTasks()) {
             this.addSubTask(subTask);
             subTask.setEpicId(epic.getId());
-
         }
+
         InMemoryTaskManager.updateEpicStatus(epic);
         epics.put(epic.getId(), epic);
+        }else{
+            for (SubTask subTask : epic.getSubTasks()) {
+                this.addSubTask(subTask);
+                subTask.setEpicId(epic.getId());
+            }
+            InMemoryTaskManager.updateEpicStatus(epic);
+                epics.put(epic.getId(), epic);
+        }
     }
     @Override
     public void updateTask(Task task) {

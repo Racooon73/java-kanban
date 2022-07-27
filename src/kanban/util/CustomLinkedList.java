@@ -16,6 +16,7 @@ public class CustomLinkedList<T extends Task> {
         Node<T> lastNode = this.last;
         Node<T> newNode = new Node<>(last, null, lastNode);
 
+
         this.last = newNode;
         if (lastNode == null) {
             this.first = newNode;
