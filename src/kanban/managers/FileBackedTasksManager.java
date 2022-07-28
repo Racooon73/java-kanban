@@ -16,12 +16,12 @@ import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    static final private Path pathsave = Paths.get("src\\kanban\\resources\\save.csv");
-    static final private Path pathload = Paths.get("src\\kanban\\resources\\load.csv");
-    public void save() {
-        try(Writer fileWriter = new FileWriter(pathsave.toString())){
+    private static final  Path PATH_SAVE = Paths.get("src\\kanban\\resources\\save.csv");
 
-            if(!Files.exists(Paths.get(pathsave.toString()))){
+    public void save() {
+        try(Writer fileWriter = new FileWriter(PATH_SAVE.toString())){
+
+            if(!Files.exists(Paths.get(PATH_SAVE.toString()))){
                 throw new ManagerSaveException();
             }
             fileWriter.write("id,type,name,status,description,epic\n");
@@ -52,16 +52,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    static public FileBackedTasksManager loadFromFile(){
+    static public FileBackedTasksManager loadFromFile(Path PATH_LOAD){
         FileBackedTasksManager manager = new FileBackedTasksManager();
         try {
 
-            if(!Files.exists(Paths.get(pathload.toString()))){
+            if(!Files.exists(Paths.get(PATH_LOAD.toString()))){
                 throw new ManagerSaveException();
             }
-            String[]content = Files.readString(pathload).split("\n");
+            String[]content = Files.readString(PATH_LOAD).split("\n");
             int i = 1;
-            while (!content[i].equals("\r")){
+            while (!((content[i].equals(""))||(content[i].equals("\r")))){
                 if(TaskType.valueOf(content[i].split(",")[1]) == TaskType.TASK){
                     manager.addTask(taskFromString(content[i]));
                 }

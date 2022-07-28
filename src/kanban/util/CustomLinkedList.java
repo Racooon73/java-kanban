@@ -8,8 +8,8 @@ import java.util.List;
 
 public class CustomLinkedList<T extends Task> {
 
-    Node<T> first;
-    Node<T> last;
+    private Node<T> first;
+    private Node<T> last;
     public final HashMap<Integer, Node<T>> nodeHashMap = new HashMap<>();
 
     public void linkLast(T last) {
@@ -45,21 +45,21 @@ public class CustomLinkedList<T extends Task> {
     }
     public void removeNode(Node<T> node) {
 
-        Node<T> prevNode = node.prev;
-        Node<T> nextNode = node.next;
+        Node<T> prevNode = node.getPrev();
+        Node<T> nextNode = node.getNext();
         nodeHashMap.remove(node.data.getId());
 
         if (prevNode == null) {
             this.first = nextNode;
         } else {
-            prevNode.next = nextNode;
-            node.prev = null;
+            prevNode.setNext(nextNode);
+            node.setPrev(null);
         }
         if (nextNode == null) {
             this.last = prevNode;
         } else {
-            nextNode.prev = prevNode;
-            node.next = null;
+            nextNode.setPrev(prevNode);
+            node.setNext(null);
         }
     }
 
@@ -73,5 +73,21 @@ public class CustomLinkedList<T extends Task> {
             this.next = next;
             this.prev = prev;
         }
-    }
+
+         public Node<T> getNext() {
+             return next;
+         }
+
+         public void setNext(Node<T> next) {
+             this.next = next;
+         }
+
+         public Node<T> getPrev() {
+             return prev;
+         }
+
+         public void setPrev(Node<T> prev) {
+             this.prev = prev;
+         }
+     }
 }
