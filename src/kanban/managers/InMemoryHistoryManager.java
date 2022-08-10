@@ -3,7 +3,9 @@ package kanban.managers;
 import kanban.tasks.Task;
 import kanban.util.CustomLinkedList;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final CustomLinkedList<Task> history;

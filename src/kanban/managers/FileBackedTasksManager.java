@@ -11,29 +11,44 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-
+    final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm - dd.MM.yyyy");
     private static final  Path PATH_SAVE = Paths.get("src\\kanban\\resources\\save.csv");
 
     public void save() {
-        try(Writer fileWriter = new FileWriter(PATH_SAVE.toString())){
+        try(Writer fileWriter = new FileWriter(PATH_SAVE.toString())) {
 
-            if(!Files.exists(Paths.get(PATH_SAVE.toString()))){
+            if (!Files.exists(Paths.get(PATH_SAVE.toString()))) {
                 throw new ManagerSaveException();
             }
-            fileWriter.write("id,type,name,status,description,epic\n");
+            fileWriter.write("id,type,name,status,description,starttime,endtime,duration,epic\n");
+            if (super.getTaskList().isEmpty()){
+                fileWriter.write("");
+            }else{
             for(Task task :super.getTaskList().values()){
                 fileWriter.write(task.toString());
             }
+            }
+            if(super.getSubTasksList().isEmpty()) {
+                fileWriter.write("");
+            }else{
             for(SubTask task :super.getSubTasksList().values()){
                 fileWriter.write(task.toString());
             }
+            }
+            if(super.getEpicsList().isEmpty()){
+                fileWriter.write("");
+            }else{
             for(Epic task :super.getEpicsList().values()){
                 fileWriter.write(task.toString());
             }
+            }
+
             fileWriter.write("\n");
             for (int i = 0; i < super.getHistory().size(); i++) {
                 if(i+1 != super.getHistory().size()){
@@ -60,6 +75,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 throw new ManagerSaveException();
             }
             String[]content = Files.readString(PATH_LOAD).split("\n");
+            if(content.length == 1){
+                throw new ManagerSaveException();
+            }
             int i = 1;
             while (!((content[i].equals(""))||(content[i].equals("\r")))){
                 if(TaskType.valueOf(content[i].split(",")[1]) == TaskType.TASK){
@@ -92,27 +110,31 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
             }
         }catch (ManagerSaveException | IOException e){
-            e.printStackTrace();
+
+            return manager;
         }
         return manager;
     }
     static Task taskFromString(String value){
         String[] split = value.split(",");
-        Task task = new Task(split[2],split[4], Status.valueOf(split[3]));
+        Task task = new Task(split[2],split[4], Status.valueOf(split[3]),LocalDateTime.parse(split[5],FORMATTER) ,Integer.parseInt(split[7]));
         task.setId(Integer.parseInt(split[0]));
         return task;
     }
     static SubTask subTaskFromString(String value){
         String[] split = value.split(",");
-        SubTask task = new SubTask(split[2],split[4], Status.valueOf(split[3]));
+        SubTask task = new SubTask(split[2],split[4], Status.valueOf(split[3]),LocalDateTime.parse(split[5],FORMATTER) ,Integer.parseInt(split[7]));
         task.setId(Integer.parseInt(split[0]));
-        task.setEpicId(Integer.parseInt(split[5].split("\r")[0]));
+        task.setEpicId(Integer.parseInt(split[8].split("\r")[0]));
         return task;
     }
     static Epic epicFromString(String value){
         String[] split = value.split(",");
         Epic task = new Epic(split[2],split[4]);
         task.setId(Integer.parseInt(split[0]));
+        task.setStartTime(LocalDateTime.parse(split[5],FORMATTER));
+        task.setDuration(Integer.parseInt(split[7]));
+
         return task;
     }
     static List<Integer> fromString(String value){

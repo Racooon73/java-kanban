@@ -3,6 +3,9 @@ package kanban.tasks;
 import kanban.enums.Status;
 import kanban.enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -11,11 +14,26 @@ public class Task {
     protected final String description;
     protected int id = -1;
     protected Status status;
+    protected int duration;
+    protected LocalDateTime startTime;
 
-    public Task(String name, String description, Status status) {
+    public Task(String name, String description, Status status,LocalDateTime startTime,int duration) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+    public LocalDateTime getEndTime(){
+        return this.startTime.plus(Duration.ofMinutes(this.duration));
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     @Override
@@ -58,7 +76,10 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + ",\n";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm - dd.MM.yyyy");
+
+        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description +","+
+                startTime.format(formatter) +","+ this.getEndTime().format(formatter) +","+ duration +",\n";
     }
 
     public String getDescription() {
