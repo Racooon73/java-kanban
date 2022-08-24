@@ -2,6 +2,7 @@ package kanban.tests;
 
 import kanban.enums.Status;
 
+import kanban.managers.InMemoryTaskManager;
 import kanban.managers.TaskManager;
 import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
-    TaskManager taskManager = Managers.getDefault();
+    TaskManager taskManager = new InMemoryTaskManager();
     Epic epic1;
     SubTask subTask1;
     SubTask subTask2;

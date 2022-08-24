@@ -56,18 +56,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }else {
                     fileWriter.write(String.valueOf(super.getHistory().get(i).getId()));
                 }
-
-
             }
-
-
 
         }catch (ManagerSaveException | IOException e){
             e.printStackTrace();
         }
     }
 
-    static public FileBackedTasksManager loadFromFile(Path PATH_LOAD){
+    static public FileBackedTasksManager load(Path PATH_LOAD){
         FileBackedTasksManager manager = new FileBackedTasksManager();
         try {
 

@@ -2,14 +2,20 @@ package kanban.tests;
 
 import kanban.enums.Status;
 import kanban.managers.FileBackedTasksManager;
+import kanban.managers.HttpTaskManager;
 import kanban.managers.InMemoryTaskManager;
 import kanban.managers.TaskManager;
+import kanban.net.KVServer;
+import kanban.net.KVTaskClient;
 import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
 import kanban.tasks.Task;
+import kanban.util.Managers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -164,7 +170,7 @@ abstract class TaskManagersTest <T extends TaskManager>{
          List<Task> saveHistory = taskManager.getHistory();
          taskManager.save();
          FileBackedTasksManager taskManager2 =
-                 FileBackedTasksManager.loadFromFile(Paths.get("src\\kanban\\resources\\save.csv"));
+                 FileBackedTasksManager.load(Paths.get("src\\kanban\\resources\\save.csv"));
 
           assertEquals(saveHistory,taskManager2.getHistory(),"Неверная загрузка из пустого файла");
      }
@@ -176,7 +182,7 @@ abstract class TaskManagersTest <T extends TaskManager>{
          Epic saveEpic = taskManager.getEpic(epic1.getId());
          List<Task> saveHistory = taskManager.getHistory();
          FileBackedTasksManager taskManager2 =
-                 FileBackedTasksManager.loadFromFile(Paths.get("src\\kanban\\resources\\save.csv"));
+                 FileBackedTasksManager.load(Paths.get("src\\kanban\\resources\\save.csv"));
 
          assertEquals(saveEpic,taskManager2.getEpicsList().get(1),"Неверная загрузка из файла");
          assertEquals(saveHistory,taskManager2.getHistory(),"Неверная загрузка из файла");
@@ -184,6 +190,46 @@ abstract class TaskManagersTest <T extends TaskManager>{
 
 
     }
+class HttpTaskManagerTest extends TaskManagersTest<HttpTaskManager>{
+    KVServer kvserver;
+    KVTaskClient client;
+    @BeforeEach
+    public void init() throws IOException, InterruptedException {
+        kvserver = new KVServer();
+         kvserver.start();
+        taskManager = Managers.getDefault();
+        client = new KVTaskClient("http://localhost:8078");
+        taskManager.setClient(client);
+    }
+    @AfterEach
+    public void close(){
+        kvserver.stop();
+    }
+    @Test
+    void loadFromServerHistoryTest() throws IOException, InterruptedException {
+        List<Task> saveHistory = taskManager.getHistory();
+        taskManager.save();
+
+        taskManager = taskManager.load();
+        assertEquals(saveHistory,taskManager.getHistory(),"Неверная загрузка из пустого сервера");
+    }
+    @Test
+    void loadFromServerOneEpicTest() throws IOException, InterruptedException {
+
+        Epic epic1 = new Epic("Epic1","0 subtasks ");
+        taskManager.addEpic(epic1);
+        Epic saveEpic = taskManager.getEpic(epic1.getId());
+        List<Task> saveHistory = taskManager.getHistory();
+
+
+        taskManager.load();
+
+        assertEquals(saveEpic,taskManager.getEpicsList().get(1),"Неверная загрузка с сервера");
+        assertEquals(saveHistory,taskManager.getHistory(),"Неверная загрузка с сервера");
+    }
+
+
+}
 
 
 

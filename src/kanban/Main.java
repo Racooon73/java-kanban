@@ -1,5 +1,8 @@
 package kanban;
 
+
+import kanban.net.HttpTaskServer;
+import kanban.net.KVServer;
 import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
 import kanban.tasks.Task;
@@ -7,15 +10,17 @@ import kanban.util.Managers;
 import kanban.enums.Status;
 import kanban.managers.*;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 
 public class Main {
 
-    public static void main(String[] args) {
-
-        FileBackedTasksManager manager = Managers.getFileBacked();
+    public static void main(String[] args) throws IOException, InterruptedException {
+        KVServer kvserver = new KVServer();
+        kvserver.start();
+        HttpTaskManager manager = Managers.getDefault();
 
         Task task = new Task("Task1"," ", Status.NEW, LocalDateTime.of(2022,8,10,12,45),30);
         Task task2 = new Task("Task2"," ",Status.IN_PROGRESS,LocalDateTime.of(2022,8,10,12,30),15);
@@ -50,13 +55,20 @@ public class Main {
         manager.getSubTask(6);
         manager.getEpic(7);
 
-        FileBackedTasksManager manager2 =
-                FileBackedTasksManager.loadFromFile(Paths.get("src\\kanban\\resources\\save.csv"));
 
-        System.out.println(manager2.getHistory());
-        System.out.println(manager2.getPrioritizedTasks());
-        System.out.println(manager2.validation());
 
+
+
+
+        //manager.addTask(new Task("TestTask", "Test description",Status.NEW, LocalDateTime.of(2022,8,10,12,0),30));
+
+        manager.load();
+
+        System.out.println(manager.getTask(1));
+        System.out.println(manager.getHistory());
+
+        HttpTaskServer server2 = new HttpTaskServer();
+        server2.start();
 
     }
 

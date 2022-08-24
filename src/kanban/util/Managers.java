@@ -1,9 +1,12 @@
 package kanban.util;
 import kanban.managers.*;
+
+import java.io.IOException;
+
 public class Managers {
 
-    public static TaskManager getDefault(){
-        return new InMemoryTaskManager();
+    public static HttpTaskManager getDefault() throws IOException, InterruptedException {
+        return new HttpTaskManager();
     }
     public static HistoryManager getDefaultHistory(){
         return new InMemoryHistoryManager();
