@@ -6,12 +6,11 @@ import kanban.net.KVServer;
 import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
 import kanban.tasks.Task;
-import kanban.util.Managers;
+import kanban.managers.ManagerProvider;
 import kanban.enums.Status;
 import kanban.managers.*;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 
@@ -20,7 +19,7 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         KVServer kvserver = new KVServer();
         kvserver.start();
-        HttpTaskManager manager = Managers.getDefault();
+        HttpTaskManager manager = ManagerProvider.getDefault();
 
         Task task = new Task("Task1"," ", Status.NEW, LocalDateTime.of(2022,8,10,12,45),30);
         Task task2 = new Task("Task2"," ",Status.IN_PROGRESS,LocalDateTime.of(2022,8,10,12,30),15);

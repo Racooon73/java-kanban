@@ -1,9 +1,9 @@
-package kanban.util;
+package kanban.managers;
 import kanban.managers.*;
 
 import java.io.IOException;
 
-public class Managers {
+public class ManagerProvider {
 
     public static HttpTaskManager getDefault() throws IOException, InterruptedException {
         return new HttpTaskManager();

@@ -4,7 +4,6 @@ import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
 import kanban.tasks.Task;
 import kanban.enums.Status;
-import kanban.util.Managers;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,7 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.subTasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.id = 0;
-        this.historyManager = Managers.getDefaultHistory();
+        this.historyManager = ManagerProvider.getDefaultHistory();
     }
     @Override
     public HashMap<Integer,Task> getTaskList(){

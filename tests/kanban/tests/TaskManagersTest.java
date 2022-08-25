@@ -10,7 +10,7 @@ import kanban.net.KVTaskClient;
 import kanban.tasks.Epic;
 import kanban.tasks.SubTask;
 import kanban.tasks.Task;
-import kanban.util.Managers;
+import kanban.managers.ManagerProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -197,7 +197,7 @@ class HttpTaskManagerTest extends TaskManagersTest<HttpTaskManager>{
     public void init() throws IOException, InterruptedException {
         kvserver = new KVServer();
          kvserver.start();
-        taskManager = Managers.getDefault();
+        taskManager = ManagerProvider.getDefault();
         client = new KVTaskClient("http://localhost:8078");
         taskManager.setClient(client);
     }
